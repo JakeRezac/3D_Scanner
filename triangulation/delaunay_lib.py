@@ -1,17 +1,5 @@
 import math
 
-#calculate every point in the shape
-#for i in range(num):
-#    x = radius * round(math.cos(angle), 2)
-#    points.append( (x,y,z) )
-#print("element vertex %d" %(len(points)))
-#for point in points:
-#    print("%.2f %.2f %.2f" %(point[0], point[1], point[2]))
-#print("%d " %(len(face)), end='') # first num is the number of verticies in the face
-
-points_2D = [ (-3,3), (0,2), (3,-3), (0,-1), (3,1), (-3,-3)]
-triangles = [ (0,1,3), (1,3,4), (3,2,4), (5,0,3), (3,2,5)]
-
 def right_of_line(point, start, end):
 	# check to see if <point> is on the right side
 	# of a line that moves from <start> to <end>
@@ -89,112 +77,6 @@ def same_triangle(tri_1, tri_2):
 
 	return False
 
-
-def point_in_triangle(point, tri_index):
-	# check to see if <point> lies within a triangle
-	# 	point_i = (x,y)
-	#	triangle = (point_1, point_2, point_3)
-
-	#Makes code more readable
-	x = 0
-	y = 1
-
-	triangle = triangles[tri_index]
-
-	p1 = triangle[0] #this element in triangles is an index in points_2D
-	p2 = triangle[1]
-	p3 = triangle[2]
-	
-	p1 = points_2D[p1] #this will be a 2D point tuple (x,y)
-	p2 = points_2D[p2]
-	p3 = points_2D[p3]
-	
-	p_list = [p1,p2,p3]
-
-	# this may not be necessary
-	##ENSURE WE ALWAYS TRAVERSE TRIANGLE COUNTER CLOCKWISE FOR CONCISTENCY
-	##Select 1st point	
-	#for i in range(1,3):					#Start list with the right most point
-	#	if (p_list[i][x] > p_list[0][x]):  		#compare "x" values of every point
-	#		temp_p = p_list[0]
-	#		p_list[0] = p_list[i]
-	#		p_list[i] = temp_p
-
-	#	elif (p_list[i][x] == p_list[0][x]): 		#if values are equal we choose for the lower "y"
-	#		if (p_list[i][y] < p_list[0][y]):
-	#			temp_p = p_list[0]
-	#			p_list[0] = p_list[i]
-	#			p_list[i] = temp_p
-
-
-	##Select order of last 2 points
-	#if (p_list[2][y] > p_list[1][y]):			#2nd point is chosen to be highest of remaining 2
-	#	temp_p = p_list[1]
-	#	p_list[1] = p_list[2]
-	#	p_list[2] = temp_p
-	#							#If last 2 points are equal height pick right most
-	#if (p_list[2][y] == p_list[1][y]) and (p_list[2][x] > p_list[1][x]):
-	#	temp_p = p_list[1]
-	#	p_list[1] = p_list[2]
-	#	p_list[2] = temp_p
-			
-
-	# Traverse the triangle and check if all sides match	
-	# right_of_line returns a tuple: (right, on_a_line)
-	on_a_line = 0	
-	
-	side1 = right_of_line(point, p_list[0], p_list[1])
-	on_a_line += side1[1]
-	side1 = side1[0]
-
-	side2 = right_of_line(point, p_list[1], p_list[2])
-	on_a_line += side2[1]
-	side2 = side2[0]
-
-	side3 = right_of_line(point, p_list[2], p_list[0])
-	on_a_line += side3[1]
-	side3 = side3[0]
-
-	if (on_a_line):						#on the line is considered inside
-		return True
-	elif (side1 == side2) and (side2 == side3):
-		return True
-	else:
-		return False	
-
-#def circle_from_3(p1, p2, p3):
-#	#We'll be calculating the center point and radius of a circle containing the 3 points
-#	#p1, p2, & p3	
-#	#points are stored as (x,y) tuples
-#	#
-#	#Returns:
-#	# 	coordinates of circles center (h,k) and radius r. Stored in thruple like so:
-#	#		(h,k,r)
-#
-#	#We'll be utilizing the equation for a circle
-#	#		r^2 = (x-h)^2 + (y-k)^2 
-#	# all values are found using algebraic identities derived from 
-#	# the system of equations made from this eq. and our 3 points.
-#	x1 = p1[0]
-#	y1 = p1[1]
-#	x2 = p2[0]
-#	y2 = p2[1]
-#	x3 = p3[0]
-#	y3 = p3[1]
-#
-#	# we compartmentalize our equations with more workable constants
-#	c1 = (y1 - y3) / (x3 - x1)
-#	c2 = (y3**2 - y1**2 + x3**2 - x1**2) / (2 * (x3 - x1))
-#	c3 = (x2 - x1) / (y1 - y2)
-#	c4 = (x1**2 - x2**2 + y1**2 - y2**2) / (2 * (y1 - y2))
-#
-#	k = ((c2*c3) + c4) / (1 - (c1 * c3))	#y-coord. of center
-#	h = (k * c1) + c2			#x-coord. of center
-#
-#	r = (x1 - h)*(x1 - h) + (y1 - k)*(y1 - k)
-#	r = math.sqrt(r)			#radius of circle
-#
-#	return (h,k,r)
 
 def circle_from_3(p1, p2, p3):
 	#We'll be calculating the center point and radius of a circle containing the 3 points
@@ -282,21 +164,6 @@ def circle_from_3(p1, p2, p3):
 
 	return (h,k,r)
 	
-#def circle_from_tri(triangle):
-#	#Wrapper function to get a circle from the 3 points of a triangle
-#	#	triangle will be a thruple of vertex tuples: 
-#	#
-#	#	triangle	(v1, v2, v3)
-#	#	v1		(x,y)
-#	#
-#	#Returns:
-#	#	circle		(h,k,r); a circle with center (h,k) and radius r
-#
-#	p1 = triangle[0]
-#	p2 = triangle[1]
-#	p3 = triangle[2]
-#
-#	return circle_from_3(p1, p2, p3)
 
 
 def point_in_circle(p, circ):
@@ -322,43 +189,109 @@ def point_in_circle(p, circ):
 	else:
 		return True
 
+def delaunay_triangulation(points, triangles):
+	#triangle are described as a thruple of verticies
+	#	(v1,v2,v3)
+	#			verticies are integers that refer to the index number
+	#			of a point in our 'points' list
+	for point_index, point in enumerate(points[3:], start = 3):		#Consider each point 1 at a time (first 3 points for super triangle so we skip them)
+		#print("placing point ", end='')
+		#print(point)
+		#Check each triangle's validity witht the new point
+		illegal_tris = []
+		for tri in triangles:						
+			#Grab points from triangle and calc their circle
+			p1 = points[tri[0]]
+			p2 = points[tri[1]]
+			p3 = points[tri[2]]
+
+			circle = circle_from_3(p1,p2,p3)
+			
+			#Check if circle contains the new point
+			if (point_in_circle(point, circle)):	
+				illegal_tris.append(tri)			#Add illegal triangles to temporary list
+
+		#Remove illegal triangles from main triangles list
+		for tri in illegal_tris:
+			triangles.remove(tri)
+		#Removing these points will create a polygonal border around the new point
+
+		
+		#Edges of the polygon will be the only edges in illegal triangles that don't match any others
+		#Compare Edges of illgal triangles to find polygon edges:
+		poly_edges = []
+		for tri in illegal_tris:					#Add every illegal_tri edge to poly_edges[]
+			for i in range(3):
+				v1 = tri[i-1]
+				v2 = tri[i]
+				edge = (v1, v2)
+				#print("edge: ", end='')
+				#print(edge)
+
+				if (v1 > v2):						#Order verticies in edge for easy comparison later
+					edge = (edge[1],edge[0])
+
+				if (edge in poly_edges):				#Each edge is shared by a max of 2 triangles.
+					poly_edges.remove(edge)				#So this conditional will ensure we only track edges with no matches.
+				else:
+					poly_edges.append(edge)
+
+		#print ("poly_edges[]: ", end='')
+		#print (poly_edges)
+		
+		#Create new triangles from each edge in the polygon and the new point being added to the triangulation
+		#print ("poly_edges: ", end ='')
+		#print (poly_edges)
+		new_tris = []
+		for edge in poly_edges:
+			#print ("edge: ", end ='')
+			#print (edge)
+			new_tri = (edge[0], edge[1], point_index)			#Remember that triangle thruples store index numbers in the points list
+			new_tris.append(new_tri)
+	
+		#print ("new_tris[]: ", end='')	
+		#print (new_tris)	
+		#Find repeat triangles 
+		illegal_tris = []						#Wipe and reuse illegal_tris[] to track duplicates in new_tris[]
+		for count, tri in enumerate(new_tris[:-1]):
+			for other in new_tris[(count + 1):]:
+				if (same_triangle(tri, other)):
+					illegal_tris.append(tri)
+					break
+
+		#Remove repeats from new_tris[]
+		#print("new_tris: ", end='')
+		#print(new_tris)
+		#print("illegal_tris: ", end='')
+		#print(illegal_tris)
+		for tri in illegal_tris:
+			#print ("removing tri: ", end ='')
+			#print (tri)
+			new_tris.remove(tri)
+
+		#Add new_tris to main triangles[] list
+		for tri in new_tris:
+			triangles.append(tri)
+	
+		#print ("triangles[]: ", end='')	
+		#print (triangles)	
+
+	#Remove all triangles that include points from the original super triangle
+	#print (triangles)
+	illegal_tris = []							#Wipe and reuse illegal_tris again
+	for tri in triangles:
+		i_p1 = tri[0]
+		i_p2 = tri[1]
+		i_p3 = tri[2]
+
+		if ( (i_p1 < 3) or (i_p2 < 3) or (i_p3 <3) ):				#Check for points from first 3 elements in the list
+			#print ("Removing tri: ", end = '')
+			#print (tri)
+			illegal_tris.append(tri)
+
+	for tri in illegal_tris:
+		#print ("Removing tri: ", end = '')
+		#print (tri)
+		triangles.remove(tri)
 
 
-
-#def circle_from_3(p1, p2, p3):
-#	#We'll be calculating the center point and radius of a circle containing the 3 points
-#	#p1, p2, & p3	
-#	#points are stored as (x,y) tuples
-#	#
-#	#Returns:
-#	# 	coordinates of circles center (h,k) and radius r. Stored in thruple like so:
-#	#		(h,k,r)
-#
-#	#We'll be utilizing the equation for a circle
-#	#		r^2 = (x-h)^2 + (y-k)^2 
-#	# all values are found using algebraic identities derived from 
-#	# the system of equations made from this eq. and our 3 points.
-#	x1 = p1[0]
-#	y1 = p1[1]
-#	x2 = p2[0]
-#	y2 = p2[1]
-#	x3 = p3[0]
-#	y3 = p3[1]
-#
-#	# we compartmentalize our equations with more workable constants
-#	c1 = (y1 - y3) / (x3 - x1)
-#	c2 = (y3**2 - y1**2 + x3**2 - x1**2) / (2 * (x3 - x1))
-#	c3 = (x2 - x1) / (y1 - y2)
-#	c4 = (x1**2 - x2**2 + y1**2 - y2**2) / (2 * (y1 - y2))
-#
-#	k = ((c2*c3) + c4) / (1 - (c1 * c3))	#y-coord. of center
-#	h = (k * c1) + c2			#x-coord. of center
-#
-#	r = (x1 - h)*(x1 - h) + (y1 - k)*(y1 - k)
-#	r = math.sqrt(r)			#radius of circle
-#
-#	return (h,k,r)
-
-#def circle_from_tri(triangle):
-#	#Wrapper function to get a circle from the 3 points of a triangle
-#	#	triangle will be a thruple of vertex tuples: 
