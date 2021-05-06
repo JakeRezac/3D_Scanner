@@ -8,7 +8,7 @@ import delaunay_lib
 
 
 
-points = [(-9,-9), (9,-9), (0,9), (3,-6), (-4,-5), (0,0), (-2,3), (3,-3)]	#we store our super triangles points in the first 3 elements
+points = [(-9,-9), (9,-9), (0,9), (3,-6), (-4,-5), (0,0), (-2,3), (3,-3), (1,-3), (-3,-9)]	#we store our super triangles points in the first 3 elements
 triangles = [(0,1,2)]
 
 
@@ -20,6 +20,8 @@ triangles = [(0,1,2)]
 
 def main():
 	for point_index, point in enumerate(points[3:], start = 3):		#Consider each point 1 at a time (first 3 points for super triangle so we skip them)
+		#print("placing point ", end='')
+		#print(point)
 		#Check each triangle's validity witht the new point
 		illegal_tris = []
 		for tri in triangles:						
@@ -52,12 +54,15 @@ def main():
 				#print(edge)
 
 				if (v1 > v2):						#Order verticies in edge for easy comparison later
-					edge = edge[-2:2]
+					edge = (edge[1],edge[0])
 
 				if (edge in poly_edges):				#Each edge is shared by a max of 2 triangles.
 					poly_edges.remove(edge)				#So this conditional will ensure we only track edges with no matches.
 				else:
 					poly_edges.append(edge)
+
+		#print ("poly_edges[]: ", end='')
+		#print (poly_edges)
 		
 		#Create new triangles from each edge in the polygon and the new point being added to the triangulation
 		#print ("poly_edges: ", end ='')
@@ -69,8 +74,8 @@ def main():
 			new_tri = (edge[0], edge[1], point_index)			#Remember that triangle thruples store index numbers in the points list
 			new_tris.append(new_tri)
 	
-		print ("new_tris[]: ", end='')	
-		print (new_tris)	
+		#print ("new_tris[]: ", end='')	
+		#print (new_tris)	
 		#Find repeat triangles 
 		illegal_tris = []						#Wipe and reuse illegal_tris[] to track duplicates in new_tris[]
 		for count, tri in enumerate(new_tris[:-1]):
@@ -85,14 +90,17 @@ def main():
 		#print("illegal_tris: ", end='')
 		#print(illegal_tris)
 		for tri in illegal_tris:
-			print ("removing tri: ", end ='')
-			print (tri)
+			#print ("removing tri: ", end ='')
+			#print (tri)
 			new_tris.remove(tri)
 
 		#Add new_tris to main triangles[] list
 		for tri in new_tris:
 			triangles.append(tri)
 	
+		#print ("triangles[]: ", end='')	
+		#print (triangles)	
+
 	#Remove all triangles that include points from the original super triangle
 	#print (triangles)
 	illegal_tris = []							#Wipe and reuse illegal_tris again
@@ -115,21 +123,5 @@ def main():
 	print (triangles)
 	print (points)
 
-	#print out triangles
-	#for tri in triangles:
-	#	p1 = points[tri[0]]
-	#	p2 = points[tri[1]]
-	#	p3 = points[tri[2]]
-	#	print("( (%f,%f), (%f,%f),  (%f,%f) )" %(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]))
-
-	#Used to test code to find a circle from 3 points
-	#for tri in triangles:
-	#	p1 = points[tri[0]]
-	#	p2 = points[tri[1]]
-	#	p3 = points[tri[2]]
-
-	#	circle = delaunay_lib.circle_from_3(p1,p2,p3)
-	#	print (circle)
-			
 main()
 
