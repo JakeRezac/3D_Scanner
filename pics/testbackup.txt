@@ -1,0 +1,53 @@
+from PIL import Image
+import glob
+from array import *
+imgArr = []
+silhouette = []
+silhouetteArr = []
+row=800
+col=600
+#rowCoord=[]
+#colCoord=[]
+#comb=[]
+#class vhull:
+#    hullList = [-100,100]
+for filename in glob.glob('C:/Users/derekS/Desktop/pics/*.png'):
+    imgArr.append(Image.open(filename))
+silhouette = [[0] * col for i in range(row)]
+for img in imgArr:
+    rgb = img.convert("RGB")
+    rgbPixelValue=rgb.getpixel((400,400))
+    print(rgbPixelValue)
+#print(imgArr[3].convert("RGB").getpixel((400,400)))
+
+for img in imgArr:
+    #rowCoord=[]
+    #colCoord=[]
+    #comb=[]
+    rgb = img.convert("RGB")
+    for x in range(row):
+        for y in range(col):
+            a=rgb.getpixel((x,y))
+            if(a==(127, 151, 161)):
+                #index=imgArr.index(img)
+                #rowCoord.append(x)
+                #colCoord.append(y)
+                silhouette[x][y]=a
+                #print(rowCoord)
+                #print(colCoord)
+                #rowCoord.append(10)
+                #colCoord.append(11)
+                #rowCoord.append(12)
+                #colCoord.append(16)
+            #if(rgb.getpixel((x,y))==(255, 255, 255)):
+            #    rowCoord.append(x)
+            #    colCoord.append(y)
+    #comb.append(rowCoord)
+    #comb.append(colCoord)
+    #silhouette.append(comb)
+    
+    print("newimg")
+print("--------------------------------------------------------")
+print(silhouette[400][400])  
+#print(len(silhouette[1][1]))  
+#print(silhouette[1][1][0])#silhouette[index of a silhouette][0 for x list and 1 for y list][value of pixel]
