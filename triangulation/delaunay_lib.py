@@ -150,6 +150,10 @@ def circle_from_3(p1, p2, p3):
 	#print ("inv_slope2")
 	#print (inv_slope2)
 
+	#print("points: ", end='')
+	#print(p1, end=', ')
+	#print(p2, end=', ')
+	#print(p3)
 	#h = ( ( y2 - inv_slope2 * x2) - ( y1 - inv_slope1 * x1 ) ) / (inv_slope1 - inv_slope2) 
 	h = 	 y2 - (inv_slope2 * x2)
 	h = h - (y1 - (inv_slope1 * x1))
@@ -365,6 +369,81 @@ def project_Top(point):
 	y = point[1] 
 	#The projected point has an origin at the bottom most left corner of the sub-plane
 	return ( (y, (-x)) )
+
+		
+def generate_cone(rad_max, rad_min, height, ang_res, step_res):
+	points = []
+	z = - (height/2)
+	rad = rad_max
+
+	step = height / step_res
+	rad_change = (rad_max - rad_min) / step_res
+
+	for j in range(step_res):
+		for i in range(ang_res):
+			theta = i * (360/ang_res)
+
+			x = rad * math.cos(math.radians(theta))
+			y = rad * math.sin(math.radians(theta))
+
+			points.append((x,y,z))
+
+		z = z + step
+		rad = rad - rad_change
+
+	return points
+			
+
+		
+	
+	
+def generate_sphere(rad, ang_res):
+	#used to generate a test point cloud
+	sphere_points = []
+	#radius = 100
+	#angular_res = 40
+	radius = rad
+	angular_res = ang_res		#How many steps to rotate a full 360 degrees
+	for phi in range(0,angular_res):
+		phi = phi * (360 / angular_res)	#Convert phi to degrees
+		z      = math.sin(math.radians(phi)) * radius
+		proj_r = math.cos(math.radians(phi)) * radius
+
+		for theta in range(0,angular_res):
+			theta = theta * (360 / angular_res)	#Convert theta to degrees
+			y = math.sin(math.radians(theta)) * proj_r
+			x = math.cos(math.radians(theta)) * proj_r
+
+			sphere_points.append((x,y,z))
+
+	return (sphere_points)
+
+def generate_ply(points, tris):
+	ply_file = open("output.ply", "w")
+	#Generate the ply file header
+	ply_file.write("ply\n")
+	ply_file.write("format ascii 1.0\n")
+	ply_file.write("element vertex %d\n" %(len(points)))
+	ply_file.write("property float x\n")
+	ply_file.write("property float y\n")
+	ply_file.write("property float z\n")
+	ply_file.write("element face %d\n" %(len(tris)))
+	ply_file.write("property list uchar int vertex_index\n")
+	ply_file.write("end_header\n")
+
+	#populate the list of verticies
+	for point in points:
+	    ply_file.write("%.2f %.2f %.2f\n" %(point[0], point[1], point[2]))
+	
+	#populate the list of faces
+	for tri in tris:
+	    ply_file.write(("3 ") ) # first num is the number of verticies in the face
+
+	    for v in tri:
+	        ply_file.write("%d " %(v))
+	    ply_file.write("\n")
+
+	ply_file.close()
 
 #def project_Front(point, Plane_dist):
 #	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Front plane
