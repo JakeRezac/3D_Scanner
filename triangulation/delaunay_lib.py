@@ -190,10 +190,15 @@ def point_in_circle(p, circ):
 		return True
 
 def delaunay_triangulation(points, triangles):
+	#points are expected to come pre-projected onto a plane and only have 2 coordinates
+	#	(x,y)
+	#			coordinates are floats that refer to a location in space
+
 	#triangle are described as a thruple of verticies
 	#	(v1,v2,v3)
 	#			verticies are integers that refer to the index number
 	#			of a point in our 'points' list
+
 	for point_index, point in enumerate(points[3:], start = 3):		#Consider each point 1 at a time (first 3 points for super triangle so we skip them)
 		#print("placing point ", end='')
 		#print(point)
@@ -293,5 +298,135 @@ def delaunay_triangulation(points, triangles):
 		#print ("Removing tri: ", end = '')
 		#print (tri)
 		triangles.remove(tri)
+
+			#########################################################################
+			#			Point Projection Functions			#
+			#########################################################################
+#Important:
+#		These projections will seem very much like magic numbers. Please reference the 'Projection_Visual.png' image 
+#		On the github repository for an intuitive diagram that should make all of this make sense
+
+def project_Front(point):
+	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Front plane
+	# 	point 		(x, y, z)
+	#     	returns		(x', y')
+	
+	y = point[1] 
+	z = point[2] 
+	#The projected point has an origin at the bottom most left corner of the sub-plane
+	return ( (y, z) )
+
+def project_Back(point):
+	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+	# 	point 		(x, y, z)
+	#     	returns		(x', y')
+
+	y = point[1] 
+	z = point[2] 
+	#The projected point has an origin at the bottom most left corner of the sub-plane
+	return ( ((-y),z) )
+
+def project_Left(point):
+	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+	# 	point 		(x, y, z)
+	#     	returns		(x', y')
+
+	x = point[0] 
+	z = point[2] 
+	#The projected point has an origin at the bottom most left corner of the sub-plane
+	return ( (x,z) )
+
+def project_Right(point):
+	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+	# 	point 		(x, y, z)
+	#     	returns		(x', y')
+
+	x = point[0] 
+	z = point[2] 
+	#The projected point has an origin at the bottom most left corner of the sub-plane
+	return ( ((-x),z) )
+
+def project_Bottom(point):
+	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+	# 	point 		(x, y, z)
+	#     	returns		(x', y')
+
+	x = point[0] 
+	y = point[1] 
+	#The projected point has an origin at the bottom most left corner of the sub-plane
+	return ( (y,x) )
+
+def project_Top(point):
+	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+	# 	point 		(x, y, z)
+	#     	returns		(x', y')
+
+	x = point[0] 
+	y = point[1] 
+	#The projected point has an origin at the bottom most left corner of the sub-plane
+	return ( (y, (-x)) )
+
+#def project_Front(point, Plane_dist):
+#	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Front plane
+#	# 	point 		(x, y, z)
+#	#     	returns		(x', y')
+#	
+#	y = point[1] 
+#	z = point[2] 
+#	#The projected point has an origin at the bottom most left corner of the sub-plane
+#	return ( (y, z) )
+#
+#def project_Back(point, Plane_dist):
+#	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+#	# 	point 		(x, y, z)
+#	#     	returns		(x', y')
+#
+#	y = point[1] 
+#	z = point[2] 
+#	#The projected point has an origin at the bottom most left corner of the sub-plane
+#	length = 2 * Plane_dist
+#	return ( ((length - y),z) )
+#
+#def project_Left(point, Plane_dist):
+#	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+#	# 	point 		(x, y, z)
+#	#     	returns		(x', y')
+#
+#	x = point[0] 
+#	z = point[2] 
+#	#The projected point has an origin at the bottom most left corner of the sub-plane
+#	return ( (x,z) )
+#
+#def project_Right(point, Plane_dist):
+#	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+#	# 	point 		(x, y, z)
+#	#     	returns		(x', y')
+#
+#	x = point[0] 
+#	z = point[2] 
+#	#The projected point has an origin at the bottom most left corner of the sub-plane
+#	length = 2 * Plane_dist
+#	return ( ((length - x),z) )
+#
+#def project_Bottom(point, Plane_dist):
+#	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+#	# 	point 		(x, y, z)
+#	#     	returns		(x', y')
+#
+#	x = point[0] 
+#	y = point[1] 
+#	#The projected point has an origin at the bottom most left corner of the sub-plane
+#	return ( (y,x) )
+#
+#def project_Top(point, Plane_dist):
+#	#point will be a 3D coordinate that we will convert to 2D by projecting it onto the Back plane
+#	# 	point 		(x, y, z)
+#	#     	returns		(x', y')
+#
+#	x = point[0] 
+#	y = point[1] 
+#	#The projected point has an origin at the bottom most left corner of the sub-plane
+#	length = 2 * Plane_dist
+#	return ( (y, (length - x)) )
 
 
