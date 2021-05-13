@@ -9,6 +9,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+#print(dir_path)
 imgArr = []
 silhouette = []
 foreground = []
@@ -41,8 +44,12 @@ class vhull:
     projections = []
     def __init__(self, coord):
         self.coord = coord    # instance variable unique to each instance  
-        
-for filename in glob.glob('C:/Users/derekS/Desktop/pics/*.png'):
+#C:\Users\DerekS\Desktop\3D_Scanner\pics
+#'C:/Users/derekS/Desktop/pics/*.png'   
+dir_path=dir_path.replace("\\","/")     
+imgPath=dir_path+'/*.png'
+print(imgPath)
+for filename in glob.glob(imgPath):
     baseImage = Image.open(filename)
     mask = baseImage.point(lambda i: i > 230 and 255)
     newImage = mask.convert("1")
