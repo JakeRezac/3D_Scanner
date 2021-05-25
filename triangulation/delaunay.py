@@ -1,9 +1,8 @@
 import math
 import delaunay_lib
+import os
+import sys
 
-
-#points = [(-9,-9), (9,-9), (0,9), (3,-6), (-4,-5), (0,0), (-2,3), (3,-3), (1,-3), (-3,-9)]	#we store our super triangles points in the first 3 elements
-#triangles = [(0,1,2)]
 
 #3D_points are described as a thruple to form a 3D coordinate
 #	(x, y, z)
@@ -72,12 +71,29 @@ def main():
 	Bottom_tris = [(0,1,2)]
 
 	#points_3D = [ (1,1,1), (2,2,2), (3,3,3), (-1,-1,-1), (-2,-2,-2),(2,0,0),(0,0,-2),(0,-2,0), (-2,0,0)]
-	#points_3D = delaunay_lib.generate_sphere(100, 20)
-	points_3D = delaunay_lib.generate_cone(100, 20, 200, 30, 30)
-	print("points_3D len: ", end='')
-	print(len(points_3D))
+	points_3D = delaunay_lib.generate_cone(100, 20, 180, 30, 30)
 
+	#import points generated from a spheres visual hull
+	#pointcloud_file = open("INSERT POINTCLOUD FILE PATH HERE", "r")
 
+	#points_3D = []
+	#for line in pointcloud_file:
+	#	line = line[2:-2]					#clean up outer brackets
+	#	line = line.split("], [")				#split each line into coordinate points
+	#	#print ("line: ")
+	#	#print (line)
+	#	for coord in line:
+	#		coord = coord.split(", ")			#split each coord into list of x,y,z components
+	#		x = coord[0]
+	#		x = float(x)
+	#		y = coord[1]
+	#		y = float(y)
+	#		z = coord[2]
+	#		z = float(z)
+	#		point = (x,y,z)
+	#		points_3D.append(point)
+	
+	pointcloud_file.close()
 	#Sort points based on what plane they are closest to. 
 	#Points will not be projected onto 2D plane until next step
 	#----------------------------------------------------------------------
