@@ -4,7 +4,7 @@ from array import *
 import math 
 from mpl_toolkits import mplot3d
 import numpy as np
-import pandas as pd
+#import pandas as pd
 
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -27,9 +27,11 @@ camD=10*cmToPixel
 silToSilD=20*cmToPixel
 totAngleY=2*math.atan(col/(2*camD))
 totAngleZ=2*math.atan(row/(2*camD))
-numAngle=30
-projD=6
-threshold=.001
+numAngle=20#adjust this number. Scales well with number of images
+skip=1#adjust this number. Bigger=More accurate and Slower
+projD=2#adjust this number
+threshold=.01#adjust this number.
+
 picCount=0;
 thetaY=totAngleY/numAngle
 thetaZ=totAngleZ/numAngle
@@ -47,7 +49,7 @@ class vhull:
 #C:\Users\DerekS\Desktop\3D_Scanner\pics
 #'C:/Users/derekS/Desktop/pics/*.png'   
 dir_path=dir_path.replace("\\","/")     
-imgPath=dir_path+'/*.png'
+imgPath=dir_path+'/pics/*.png'
 print(imgPath)
 for filename in glob.glob(imgPath):
     baseImage = Image.open(filename)
@@ -82,7 +84,7 @@ for img in imgArr:
                 yLocSpace=camD*math.tan(y)
                 zLocSpace=-camD*math.tan(z)
                 
-                for x in np.arange(projD):
+                for x in np.arange(0,projD,skip):
                     #a=x-camD-silToSilD/2
                     a=x-projD/2
                     b=x*yLocSpace
@@ -93,7 +95,7 @@ for img in imgArr:
                     adjustedY=b*math.cos(shift*imgIndex)+a*math.sin(shift*imgIndex)
                     #print(a," ",b," ",c)
                     #print(adjustedX,",",adjustedY,",",c)
-                    print("-------------------------")
+                    #print("-------------------------")
                     #listproj=[str(adjustedX),str(adjustedY),str(c)]
                     #proj = ",".join(listproj)
                     hull.projections.append([adjustedX,adjustedY,c])
@@ -105,7 +107,7 @@ for img in imgArr:
     silhouette.append(foreground)
     print("newimg")
     imgIndex+=1
-print("--------------------------------------------------------")
+#print("--------------------------------------------------------")
 # for a in range(len(silhouette)):
     # print("left sil ",a)
     # for a2 in range(a+1,len(silhouette)):
@@ -141,7 +143,7 @@ print("--------------------------------------------------------")
         
 #for a in range(0,combinedprojections):
 combinedprojections.extend(silhouette[0][0].projections)    
-print("--------------------------------------------------------")
+#print("--------------------------------------------------------")
 # print(len(silhouette))
 # for x in range(len(silhouette)):
     # print("-------------------------")
@@ -175,8 +177,13 @@ ax.set_zlabel('Z Label')
 
 interval=int(len(combinedprojections)/len(silhouette))
 print(interval)
+skip1=1
 for a in range(len(silhouette)):
-    for x in range(a*interval,a*interval+interval):
+    #for x in range(a*interval,a*interval+interval,skip1):
+    x=a*interval
+    while(x<a*interval+interval):
+        #print(skip1)
+        skip1=1
         for y in range(a*interval+interval,len(combinedprojections)):
             x1=combinedprojections[x][0]
             y1=combinedprojections[x][1]
@@ -186,15 +193,26 @@ for a in range(len(silhouette)):
             z2=combinedprojections[y][2]
             if(math.sqrt(pow(x2-x1,2)+pow(y2-y1,2)+pow(z2-z1,2))<threshold):
                 #print(x1,",",y1,",",z1," with ",x2,",",y2,",",z2)
+                print("x: ",x," -------------------------------------------------------------------")
                 intersect.append([x2,y2,z2])
                 ax.scatter(x2,y2,z2,color='green')
+                skip1=abs(int((projD-round(x2))/skip))+1
+                #skip1=1000
+                break
+                #print("fail")
+            #print(y)
+        x+=skip1
 # print(combinedprojections[1][0])
 # print(combinedprojections[1][1])
 # print(combinedprojections[1][2])
 print(intersect)
-ax.set_xlim3d(-2, 2)
-ax.set_ylim3d(-150, 150)
-ax.set_zlim3d(-150, 150)
+print(len(intersect))
+# ax.set_xlim3d(-2, 2)
+# ax.set_ylim3d(-150, 150)
+# ax.set_zlim3d(-150, 150)
+
+#for x in range(intersect):
+
 plt.show()
 
 
